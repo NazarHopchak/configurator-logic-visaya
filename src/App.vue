@@ -1,18 +1,40 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div id="app" class="form-group">
+    <div v-for="(option, index) in options" :key="index" class="col-xs-12 dropdown-container">
+      <OptionsDropdown class="col-xs-4"
+        v-bind="option"
+        :exclusions="exclusions"
+        :global-selected-options="globalSelectedOptions"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import OptionsDropdown from './components/OptionsDropdown.vue';
+
+import data from './data.json';
+import { Dropdown, ExclusionRule, DropdownOption } from './models/models';
+
+const options = data.options as Dropdown[];
+const exclusions = data.exclusions as ExclusionRule[];
+
+// in a bigger project I would use a state management tool as Vuex
+// yet, as the project is really tiny one just the following object(array) will be used to store the state
+// each component receives the reference to the object, and so can modify it utilizing the possibilities of the reference types
+const globalSelectedOptions: DropdownOption[] = [];
 
 export default Vue.extend({
   name: 'app',
+  data() {
+    return {
+      options,
+      exclusions,
+      globalSelectedOptions,
+    };
+  },
   components: {
-    HelloWorld,
+    OptionsDropdown,
   },
 });
 </script>
@@ -24,6 +46,10 @@ export default Vue.extend({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 20px;
+}
+
+.dropdown-container {
+  margin-bottom: 20px;
 }
 </style>
